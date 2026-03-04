@@ -1,13 +1,18 @@
 {
   "domain": "ha_light_controller",
   "name": "Light Controller",
-  "codeowners": ["@L3DigitalNet"],
+  "codeowners": [
+    "@chrisdpurcell"
+  ],
   "config_flow": true,
-  "dependencies": ["light", "group"],
-  "documentation": "https://github.com/L3DigitalNet/HA-Light-Controller",
+  "dependencies": [
+    "light",
+    "group"
+  ],
+  "documentation": "https://github.com/L3DigitalNet/ha-light-controller",
   "integration_type": "service",
   "iot_class": "calculated",
-  "issue_tracker": "https://github.com/L3DigitalNet/HA-Light-Controller/issues",
+  "issue_tracker": "https://github.com/L3DigitalNet/ha-light-controller/issues",
   "requirements": [],
   "version": "0.4.0"
 }
