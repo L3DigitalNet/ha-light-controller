@@ -76,12 +76,9 @@ clean: ## Remove build artifacts and cache files
 	@find . -type f -name "*.pyc" -delete
 	@echo "$(GREEN)Cleanup complete!$(NC)"
 
-install: ## Install dependencies in virtual environment
+install: ## Install dependencies from lockfile
 	@echo "$(BLUE)Installing dependencies...$(NC)"
-	@pip install -U pip
-	@pip install homeassistant aiohttp voluptuous
-	@pip install pytest pytest-asyncio pytest-homeassistant-custom-component pytest-cov
-	@pip install ruff mypy pre-commit
+	@uv sync --locked --group dev
 	@echo "$(GREEN)Dependencies installed!$(NC)"
 
 setup: install ## Initial project setup (install + pre-commit hooks)
