@@ -20,6 +20,7 @@ class TestDiagnostics:
         assert "options" in result
         assert "preset_count" in result
         assert "presets" in result
+        assert "runtime_status" in result
         assert result["preset_count"] == 0
         assert result["presets"] == {}
 
@@ -66,16 +67,16 @@ class TestDiagnostics:
         }
 
     @pytest.mark.asyncio
-    async def test_diagnostics_preset_summary_content(
+    async def test_diagnostics_preset_names_redacted(
         self, hass, config_entry_with_presets
     ):
-        """Test preset summary contains expected data."""
+        """Test preset names are redacted in diagnostics output."""
         result = await async_get_config_entry_diagnostics(
             hass, config_entry_with_presets
         )
 
         preset_1 = result["presets"]["preset_1"]
-        assert preset_1["name"] == "Test Preset"
+        assert preset_1["name"] == "**REDACTED**"
         assert preset_1["entity_count"] == 2
         assert preset_1["state"] == "on"
         assert preset_1["has_targets"] is False
