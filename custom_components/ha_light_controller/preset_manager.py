@@ -264,6 +264,45 @@ class PresetManager:
         _LOGGER.info("Created preset: %s (%s)", name, preset_id)
         return preset
 
+    async def update_preset(
+        self,
+        preset_id: str,
+        name: str,
+        entities: list[str],
+        state: str = "on",
+        brightness_pct: int = 100,
+        rgb_color: list[int] | None = None,
+        color_temp_kelvin: int | None = None,
+        effect: str | None = None,
+        targets: list[dict[str, Any]] | None = None,
+        transition: float = 0.0,
+        skip_verification: bool = False,
+    ) -> PresetConfig | None:
+        """Update an existing preset in-place, preserving its ID."""
+        if preset_id not in self._presets:
+            _LOGGER.warning("Preset not found for update: %s", preset_id)
+            return None
+
+        preset = PresetConfig(
+            id=preset_id,
+            name=name,
+            entities=entities,
+            state=state,
+            brightness_pct=brightness_pct,
+            rgb_color=rgb_color,
+            color_temp_kelvin=color_temp_kelvin,
+            effect=effect,
+            targets=targets or [],
+            transition=transition,
+            skip_verification=skip_verification,
+        )
+
+        self._presets[preset_id] = preset
+        await self._save_presets()
+
+        _LOGGER.info("Updated preset: %s (%s)", name, preset_id)
+        return preset
+
     async def delete_preset(self, preset_id: str) -> bool:
         """Delete a preset and its associated entities."""
         if preset_id not in self._presets:

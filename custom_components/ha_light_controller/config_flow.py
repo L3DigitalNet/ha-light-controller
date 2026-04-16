@@ -829,9 +829,10 @@ class LightControllerOptionsFlow(OptionsFlow):
                 }
 
                 if editing_preset_id and editing_preset_id in preset_manager.presets:
-                    # Delete old preset and create new one with same ID
-                    await preset_manager.delete_preset(editing_preset_id)
-                    await preset_manager.create_preset(**preset_kwargs)
+                    # Update in-place to preserve preset_id (and entity registry IDs)
+                    await preset_manager.update_preset(
+                        editing_preset_id, **preset_kwargs
+                    )
                     _LOGGER.info(
                         "Updated preset: %s with %d entity configs", name, len(targets)
                     )
