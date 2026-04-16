@@ -7,10 +7,10 @@ and information for contributors.
 
 1. Fork the repository
 2. Clone your fork: `git clone https://github.com/YOUR_USERNAME/ha-light-controller.git`
-3. Create a feature branch: `git checkout -b feature/your-feature-name`
+3. Create a feature branch from `testing`: `git checkout -b feature/your-feature-name testing`
 4. Make your changes
 5. Push to your fork: `git push origin feature/your-feature-name`
-6. Open a Pull Request against the `main` branch
+6. Open a Pull Request against the `testing` branch (not `main`)
 
 ## Development Setup
 

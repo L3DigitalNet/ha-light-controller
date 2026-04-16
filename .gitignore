@@ -207,24 +207,6 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 
-# ============================================================================
-# HA LIGHT CONTROLLER - TRACKED FILES
-# ============================================================================
-# The following files MUST be tracked in version control:
-#
-# ✅ INCLUDE (DO NOT IGNORE):
-# - .github/copilot-instructions.md       (GitHub Copilot auto-detection)
-# - .vscode/codex-instructions.md         (VS Code Codex integration)
-# - resources/agents/                      (HA integration agent files)
-# - CLAUDE.md                              (Claude Code project instructions)
-# - REFERENCE_GUIDE.md                     (Comprehensive documentation)
-# - .github/AUTOMATION_GUIDE.md            (Automation documentation)
-# - .github/workflows/                     (CI/CD pipelines)
-# - .github/ISSUE_TEMPLATE/                (Issue templates)
-# - .github/pull_request_template.md       (PR template)
-# - .vscode/tasks.json                     (VS Code tasks)
-# - Makefile                               (CLI commands)
-# ============================================================================
-
-# Claude Code state
+# Claude Code state and local settings
 .claude/state/
+.claude/settings.local.json
