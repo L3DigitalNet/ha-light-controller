@@ -101,19 +101,23 @@ coverage-report: ## Open HTML coverage report in browser
 ci: ## Simulate CI checks locally
 	@echo "$(BLUE)Running CI checks locally...$(NC)"
 	@echo ""
-	@echo "$(BLUE)[1/4] Linting...$(NC)"
+	@echo "$(BLUE)[0/5] Version check...$(NC)"
+	@python scripts/check_versions.py || (echo "$(RED)Version check failed$(NC)" && exit 1)
+	@echo "$(GREEN)✓ Version check passed$(NC)"
+	@echo ""
+	@echo "$(BLUE)[1/5] Linting...$(NC)"
 	@ruff check custom_components/ tests/ scripts/ || (echo "$(RED)Linting failed$(NC)" && exit 1)
 	@echo "$(GREEN)✓ Linting passed$(NC)"
 	@echo ""
-	@echo "$(BLUE)[2/4] Format check...$(NC)"
+	@echo "$(BLUE)[2/5] Format check...$(NC)"
 	@ruff format --check custom_components/ tests/ scripts/ || (echo "$(RED)Format check failed$(NC)" && exit 1)
 	@echo "$(GREEN)✓ Format check passed$(NC)"
 	@echo ""
-	@echo "$(BLUE)[3/4] Type checking...$(NC)"
+	@echo "$(BLUE)[3/5] Type checking...$(NC)"
 	@mypy custom_components/ || (echo "$(RED)Type check failed$(NC)" && exit 1)
 	@echo "$(GREEN)✓ Type check passed$(NC)"
 	@echo ""
-	@echo "$(BLUE)[4/4] Tests...$(NC)"
+	@echo "$(BLUE)[4/5] Tests...$(NC)"
 	@pytest tests/ -v || (echo "$(RED)Tests failed$(NC)" && exit 1)
 	@echo "$(GREEN)✓ All tests passed$(NC)"
 	@echo ""
