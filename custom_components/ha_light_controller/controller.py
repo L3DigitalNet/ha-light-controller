@@ -469,8 +469,8 @@ class LightController:
             rgb_ok = rgb_result is not False if has_rgb else True
             kelvin_ok = kelvin_result is not False if has_kelvin else True
 
-            # Success if either color mode is satisfied
-            if rgb_ok or kelvin_ok:
+            # Every requested color mode must match
+            if rgb_ok and kelvin_ok:
                 return VerificationResult.SUCCESS
             return VerificationResult.WRONG_COLOR
 
