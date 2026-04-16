@@ -1553,6 +1553,56 @@ class TestLightControllerEnsureStateAdvanced:
         assert set(sent_batches[1]) == {"light.group_ok", "light.group_flaky"}
 
 
+class TestGroupOverrideExpansion:
+    """Tests that group entity overrides are remapped to individual members (PLR-002)."""
+
+    @pytest.mark.asyncio
+    async def test_group_override_applied_to_members(self, hass):
+        """Override keyed to a group entity should apply to each member light."""
+        from tests.conftest import create_light_state
+
+        # Group with two members
+        group_state = MagicMock()
+        group_state.state = "on"
+        group_state.attributes = {
+            "entity_id": ["light.lamp1", "light.lamp2"],
+        }
+        lamp_state = create_light_state(
+            "light.lamp1", STATE_ON, brightness=255
+        )
+
+        def get_state(entity_id):
+            if entity_id == "light.living_room":
+                return group_state
+            return lamp_state
+
+        hass.states.get = MagicMock(side_effect=get_state)
+
+        controller = LightController(hass)
+        result = await controller.ensure_state(
+            entities=["light.living_room"],
+            state_target="on",
+            default_brightness_pct=100,
+            targets=[
+                {
+                    "entity_id": "light.living_room",
+                    "brightness_pct": 50,
+                    "rgb_color": [255, 0, 0],
+                }
+            ],
+            skip_verification=True,
+        )
+
+        assert result["success"] is True
+        # Verify the group override was applied
+        call_args = hass.services.async_call.call_args_list
+        assert len(call_args) > 0
+        for call in call_args:
+            sdata = call[1].get("service_data") or call[0][2]
+            if "brightness_pct" in sdata:
+                assert sdata["brightness_pct"] == 50
+
+
 class TestMixedStateHandling:
     """Tests for handling presets with mixed on/off states."""
 

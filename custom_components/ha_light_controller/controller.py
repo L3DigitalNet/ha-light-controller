@@ -720,12 +720,21 @@ class LightController:
                 ", ".join(skipped_entities),
             )
 
-        # Build overrides dict
+        # Build overrides dict, expanding group entities to their members
         overrides: dict[str, dict[str, Any]] = {}
         if targets:
             for t in targets:
-                if isinstance(t, dict) and "entity_id" in t:
-                    overrides[t["entity_id"]] = t
+                if not isinstance(t, dict) or "entity_id" not in t:
+                    continue
+                eid = t["entity_id"]
+                if eid in members:
+                    overrides[eid] = t
+                else:
+                    # Entity may be a group that was expanded; remap to members
+                    group_members, _ = self._expand_entity(eid)
+                    for gm in group_members:
+                        if gm in members and gm not in overrides:
+                            overrides[gm] = {**t, "entity_id": gm}
 
         # Build targets
         pending_targets = self._build_targets(
