@@ -1,6 +1,6 @@
 # Codex Review Remediation Plan
 
-- Status: 🟡 Proposed — awaiting Q1-Q9 answers before execution
+- Status: ✅ Complete — DO NOT EXECUTE. All 16 batches merged to main as v0.4.1 (tag `v0.4.1`, 2026-04-16)
 - Source sweep: `docs/review-orchestrator/2026-04-16-0018-codex-review-sweep.md`
 - Created: 2026-04-16
 - Target branch: `testing` (per `CLAUDE.md`) — see Q1

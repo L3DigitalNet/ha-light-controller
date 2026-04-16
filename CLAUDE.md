@@ -51,11 +51,11 @@ make quality           # Run all quality checks
 make ci                # Simulate CI checks locally
 make setup             # Initial project setup
 
-# Direct commands (also work)
-pytest tests/
-pytest tests/test_controller.py
-pytest tests/test_controller.py::test_ensure_state_single_light
-pytest --cov=custom_components/ha_light_controller
+# Direct commands (via uv run, since tools live in the managed venv)
+uv run pytest tests/
+uv run pytest tests/test_controller.py
+uv run pytest tests/test_controller.py::test_ensure_state_single_light
+uv run pytest --cov=custom_components/ha_light_controller
 
 # Enable debug logging (add to HA configuration.yaml)
 logger:
@@ -77,6 +77,7 @@ running HA instance.
 | `preset_manager.py`       | Preset storage in `ConfigEntry.data[CONF_PRESETS]`, `activate_preset_with_options()` for shared activation logic                                                          |
 | `config_flow.py`          | Menu-based options flow: settings (collapsible sections), add_preset (multi-step with per-entity config), manage_presets (edit/delete with confirmation)                  |
 | `button.py` / `sensor.py` | Preset entities: button activates preset via `preset_manager.activate_preset_with_options()`, sensor tracks status                                                        |
+| `diagnostics.py`          | Config-entry diagnostics with PII redaction and runtime preset status                                                                                                     |
 | `const.py`                | All `CONF_*`, `ATTR_*`, `DEFAULT_*`, `PRESET_*` constants                                                                                                                 |
 
 ### Key Classes
@@ -184,6 +185,13 @@ Tests mock HA modules before import. Key fixtures in `conftest.py`:
 - `config_entry` / `config_entry_with_presets` - Mock config entries
 - `mock_light_states` - Pre-configured light states
 - `create_light_state()` - Helper for mock State objects
+
+### Integration Tests
+
+`tests/integration/` contains a skeleton for `pytest-homeassistant-custom-component`
+harness tests. These are excluded from the default test run (`--ignore=tests/integration`
+in `pyproject.toml`) because they conflict with the unit test mock layer. See
+`docs/plans/2026-04-16-test-harness-migration.md` for the migration plan.
 
 ### Live Testing with HA Dev Server
 
