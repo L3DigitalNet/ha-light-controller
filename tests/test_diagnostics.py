@@ -1,11 +1,14 @@
 """Tests for diagnostics."""
 
+from unittest.mock import MagicMock
+
 import pytest
 
 # The conftest.py mocks are loaded before this import
 from custom_components.ha_light_controller.diagnostics import (
     async_get_config_entry_diagnostics,
 )
+from custom_components.ha_light_controller.preset_manager import PresetManager
 
 
 class TestDiagnostics:
@@ -81,3 +84,19 @@ class TestDiagnostics:
         assert preset_1["state"] == "on"
         assert preset_1["has_targets"] is False
         assert preset_1["skip_verification"] is False
+
+    @pytest.mark.asyncio
+    async def test_diagnostics_runtime_status(self, hass, config_entry_with_presets):
+        """Test diagnostics includes runtime preset status when loaded."""
+        pm = PresetManager(hass, config_entry_with_presets)
+        runtime_data = MagicMock()
+        runtime_data.preset_manager = pm
+        config_entry_with_presets.runtime_data = runtime_data
+
+        result = await async_get_config_entry_diagnostics(
+            hass, config_entry_with_presets
+        )
+
+        assert "runtime_status" in result
+        assert "preset_1" in result["runtime_status"]
+        assert result["runtime_status"]["preset_1"]["status"] == "idle"

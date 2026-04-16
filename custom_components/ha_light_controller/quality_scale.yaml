@@ -110,7 +110,7 @@ rules:
     status: exempt
     comment: No authentication credentials to refresh.
 
-  # 315 tests at 98%+ branch coverage
+  # 324 tests at 98%+ branch coverage, --cov-fail-under=95
   test-coverage: done
 
   # =========================================================================
