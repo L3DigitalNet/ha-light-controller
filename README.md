@@ -129,6 +129,11 @@ status tracking.
 See the **[Usage Guide](USAGE.md)** for complete service parameters, configuration
 options, examples, and [diagnostics](USAGE.md#diagnostics).
 
+## Runbooks
+
+- [Incident Disablement](docs/runbooks/incident-disablement.md) — containment, evidence capture, fallback, rollback
+- [Release](docs/runbooks/release.md) — version bump order, tagging, HACS validation
+
 ## Links
 
 - [Issue Tracker](https://github.com/L3DigitalNet/HA-Light-Controller/issues)
