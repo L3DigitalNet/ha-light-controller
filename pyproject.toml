@@ -88,6 +88,7 @@ addopts = [
     "--strict-markers",  # Treat unregistered markers as errors
     "--strict-config",  # Treat config errors as errors
     "-v",  # Verbose output
+    "--ignore=tests/integration",  # Integration tests run separately
 ]
 markers = [
     "unit: Unit tests",
