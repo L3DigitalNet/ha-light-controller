@@ -1,0 +1,28 @@
+{
+  "canonical_prompt": "perform a CI review",
+  "completed_at": "2026-04-16T00:30:34.507569+00:00",
+  "error": null,
+  "follow_on_reviews": [],
+  "last_heartbeat_at": "2026-04-16T00:30:34.507569+00:00",
+  "last_message_path": null,
+  "last_progress_message": "Child review completed successfully. Elapsed: 4m39s. Saved report: docs/ci-reviews/2026-04-15-2028-codex-ci-review.md",
+  "latest_existing_report": null,
+  "queue_position": 5,
+  "repo_name": "ha-light-controller",
+  "repo_root": "/home/chris/projects/ha-light-controller",
+  "residual_risk_summary": [],
+  "review_manifest_path": "/home/chris/projects/ha-light-controller/docs/ci-reviews/2026-04-16-0018-ci-cd-review-execution.json",
+  "review_skill": "ci-cd-review",
+  "save_dir": "docs/ci-reviews/",
+  "saved_report_path": "docs/ci-reviews/2026-04-15-2028-codex-ci-review.md",
+  "shared_research_path": "docs/review-orchestrator/2026-04-16-0018-codex-review-shared-research.md",
+  "shared_research_status": "completed",
+  "started_at": "2026-04-16T00:25:55.067515+00:00",
+  "status": "completed",
+  "sweep_started_at": "2026-04-16-0018",
+  "top_findings_summary": [
+    "CI-001",
+    "CI-002",
+    "CI-003"
+  ]
+}

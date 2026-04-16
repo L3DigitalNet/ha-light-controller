@@ -1,0 +1,28 @@
+{
+  "canonical_prompt": "perform a test review",
+  "completed_at": "2026-04-16T00:36:09.380159+00:00",
+  "error": null,
+  "follow_on_reviews": [],
+  "last_heartbeat_at": "2026-04-16T00:36:09.380159+00:00",
+  "last_message_path": null,
+  "last_progress_message": "Child review completed successfully. Elapsed: 5m34s. Saved report: docs/test-reviews/2026-04-15-2034-codex-test-review.md",
+  "latest_existing_report": null,
+  "queue_position": 9,
+  "repo_name": "ha-light-controller",
+  "repo_root": "/home/chris/projects/ha-light-controller",
+  "residual_risk_summary": [],
+  "review_manifest_path": "/home/chris/projects/ha-light-controller/docs/test-reviews/2026-04-16-0018-test-suite-review-execution.json",
+  "review_skill": "test-suite-review",
+  "save_dir": "docs/test-reviews/",
+  "saved_report_path": "docs/test-reviews/2026-04-15-2034-codex-test-review.md",
+  "shared_research_path": "docs/review-orchestrator/2026-04-16-0018-codex-review-shared-research.md",
+  "shared_research_status": "completed",
+  "started_at": "2026-04-16T00:30:34.543208+00:00",
+  "status": "completed",
+  "sweep_started_at": "2026-04-16-0018",
+  "top_findings_summary": [
+    "TEST-001: the repo does not declare a reproducible test environment, so the suite is not runnable from project metadata alone.",
+    "TEST-002: the suite replaces Home Assistant with a global `MagicMock` module tree, so it mostly validates local assumptions instead of the real integration contract.",
+    "TEST-003: schema and input-validation paths are effectively untested because the suite stubs out `voluptuous` and Home Assistant config validation helpers."
+  ]
+}

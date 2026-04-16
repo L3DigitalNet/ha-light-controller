@@ -1,0 +1,380 @@
+{
+  "active_review_details": {},
+  "active_review_index": null,
+  "active_review_skill": null,
+  "active_review_started_at": null,
+  "active_review_total": null,
+  "active_reviews": [],
+  "budget": "standard",
+  "completed_at": "2026-04-16T00:36:09.449121+00:00",
+  "completed_review_count_live": 9,
+  "completed_reviews": [
+    {
+      "canonical_prompt": "perform a product logic review",
+      "completed_at": "2026-04-16T00:32:09.428919+00:00",
+      "error": null,
+      "follow_on_reviews": [],
+      "last_message_path": null,
+      "latest_existing_report": null,
+      "residual_risk_summary": [
+        "Mixed-state presets are intentionally collapsed to a single preset-level `state` of `on` when any target is on, which can make button/sensor attributes less descriptive than actual activation behavior.",
+        "Existing tests are strong on internal coverage but currently miss or normalize several cross-surface product invariants, especially edit round-trips, name uniqueness, and group-based preset activation semantics."
+      ],
+      "review_skill": "product-and-business-logic-review",
+      "saved_report_path": "docs/product-logic-reviews/2026-04-15-2030-codex-product-logic-review.md",
+      "status": "completed",
+      "sweep_started_at": "2026-04-16-0018",
+      "top_findings_summary": [
+        "PLR-001: `Single-mode color verification can never fail, so retries are skipped for the main advertised use case`",
+        "PLR-002: `Presets that include groups lose their configured per-entity settings after expansion`",
+        "PLR-003: `Editing a preset is implemented as delete-and-recreate, which churns IDs and entity identity`"
+      ]
+    },
+    {
+      "canonical_prompt": "perform a documentation review",
+      "completed_at": "2026-04-16T00:31:14.473574+00:00",
+      "error": null,
+      "follow_on_reviews": [],
+      "last_message_path": null,
+      "latest_existing_report": null,
+      "residual_risk_summary": [],
+      "review_skill": "documentation-and-runbook-review",
+      "saved_report_path": "docs/documentation-reviews/2026-04-15-2029-codex-documentation-review.md",
+      "status": "completed",
+      "sweep_started_at": "2026-04-16-0018",
+      "top_findings_summary": [
+        "DOC-001: Contributor setup instructions are not executable as written and can push contributors into the wrong Python environment.",
+        "DOC-002: The troubleshooting guide tells users to restart Home Assistant after creating presets, but the integration is implemented to add preset entities dynamically.",
+        "DOC-003: The preset button icon behavior documented in `USAGE.md` is stale and contradicts the current implementation."
+      ]
+    },
+    {
+      "canonical_prompt": "perform a dependency review",
+      "completed_at": "2026-04-16T00:31:59.082412+00:00",
+      "error": null,
+      "follow_on_reviews": [],
+      "last_message_path": null,
+      "latest_existing_report": null,
+      "residual_risk_summary": [],
+      "review_skill": "dependency-supply-chain-review",
+      "saved_report_path": "docs/dependency-reviews/2026-04-15-2026-codex-dependency-review.md",
+      "status": "completed",
+      "sweep_started_at": "2026-04-16-0018",
+      "top_findings_summary": []
+    },
+    {
+      "canonical_prompt": "perform an AI workflow review",
+      "completed_at": "2026-04-16T00:31:32.142557+00:00",
+      "error": null,
+      "follow_on_reviews": [],
+      "last_message_path": null,
+      "latest_existing_report": null,
+      "residual_risk_summary": [],
+      "review_skill": "ai-and-prompt-workflow-review",
+      "saved_report_path": "docs/ai-workflow-reviews/2026-04-15-2029-codex-ai-workflow-review.md",
+      "status": "completed",
+      "sweep_started_at": "2026-04-16-0018",
+      "top_findings_summary": [
+        "AI-001",
+        "AI-002",
+        "AI-003"
+      ]
+    },
+    {
+      "canonical_prompt": "perform a CI review",
+      "completed_at": "2026-04-16T00:30:34.507569+00:00",
+      "error": null,
+      "follow_on_reviews": [],
+      "last_message_path": null,
+      "latest_existing_report": null,
+      "residual_risk_summary": [],
+      "review_skill": "ci-cd-review",
+      "saved_report_path": "docs/ci-reviews/2026-04-15-2028-codex-ci-review.md",
+      "status": "completed",
+      "sweep_started_at": "2026-04-16-0018",
+      "top_findings_summary": [
+        "CI-001",
+        "CI-002",
+        "CI-003"
+      ]
+    },
+    {
+      "canonical_prompt": "perform an observability review",
+      "completed_at": "2026-04-16T00:31:17.261238+00:00",
+      "error": null,
+      "follow_on_reviews": [],
+      "last_message_path": null,
+      "latest_existing_report": null,
+      "residual_risk_summary": [],
+      "review_skill": "observability-review",
+      "saved_report_path": "docs/observability-reviews/2026-04-15-2029-codex-observability-review.md",
+      "status": "completed",
+      "sweep_started_at": "2026-04-16-0018",
+      "top_findings_summary": [
+        "OBS-001",
+        "OBS-002",
+        "OBS-003"
+      ]
+    },
+    {
+      "canonical_prompt": "perform a release readiness review",
+      "completed_at": "2026-04-16T00:31:48.893498+00:00",
+      "error": null,
+      "follow_on_reviews": [],
+      "last_message_path": null,
+      "latest_existing_report": null,
+      "residual_risk_summary": [],
+      "review_skill": "release-readiness-review",
+      "saved_report_path": "docs/release-readiness-reviews/2026-04-15-2030-codex-release-readiness-review.md",
+      "status": "completed",
+      "sweep_started_at": "2026-04-16-0018",
+      "top_findings_summary": [
+        "RR-001: Release metadata is internally inconsistent. The integration manifest says `0.4.0`, but the Python and Node package metadata still say `0.3.0`.",
+        "RR-002: Release-affecting validation depends on mutable upstream branch heads.",
+        "RR-003: The repo has no in-repo release workflow, no release checklist, and no rollback or post-release verification runbook."
+      ]
+    },
+    {
+      "canonical_prompt": "perform an incident readiness review",
+      "completed_at": "2026-04-16T00:32:07.472336+00:00",
+      "error": null,
+      "follow_on_reviews": [],
+      "last_message_path": null,
+      "latest_existing_report": null,
+      "residual_risk_summary": [],
+      "review_skill": "incident-readiness-review",
+      "saved_report_path": "docs/incident-readiness-reviews/2026-04-15-2029-codex-incident-readiness-review.md",
+      "status": "completed",
+      "sweep_started_at": "2026-04-16-0018",
+      "top_findings_summary": [
+        "IR-001: The repo does not document an incident disablement or rollback path.",
+        "IR-002: The support bundle is too thin to help with real incident triage.",
+        "IR-003: Failure context is non-durable and easy to miss after the initial incident."
+      ]
+    },
+    {
+      "canonical_prompt": "perform a test review",
+      "completed_at": "2026-04-16T00:36:09.380159+00:00",
+      "error": null,
+      "follow_on_reviews": [],
+      "last_message_path": null,
+      "latest_existing_report": null,
+      "residual_risk_summary": [],
+      "review_skill": "test-suite-review",
+      "saved_report_path": "docs/test-reviews/2026-04-15-2034-codex-test-review.md",
+      "status": "completed",
+      "sweep_started_at": "2026-04-16-0018",
+      "top_findings_summary": [
+        "TEST-001: the repo does not declare a reproducible test environment, so the suite is not runnable from project metadata alone.",
+        "TEST-002: the suite replaces Home Assistant with a global `MagicMock` module tree, so it mostly validates local assumptions instead of the real integration contract.",
+        "TEST-003: schema and input-validation paths are effectively untested because the suite stubs out `voluptuous` and Home Assistant config validation helpers."
+      ]
+    }
+  ],
+  "current_branch": "main",
+  "current_phase": "completed",
+  "execution_profile_used": "review-sweep",
+  "failed_review_count_live": 0,
+  "failed_reviews": [],
+  "head_commit": "11b525c1d0139673e78daf7a68a4557d3715f0ce",
+  "last_heartbeat_at": "2026-04-16T00:36:09.449175+00:00",
+  "last_progress_message": "Sweep execution finished and final artifacts were written.",
+  "live_status_path": "docs/review-orchestrator/2026-04-16-0018-codex-review-live-status.md",
+  "max_parallel_reviews": 8,
+  "mode": "sweep",
+  "orchestrator_version": "stage2",
+  "planned_reviews": [
+    {
+      "applicable": "yes",
+      "blocking_unknowns": [],
+      "canonical_prompt": "perform a product logic review",
+      "confidence": "high",
+      "default_execution_group": "repo-shape-and-intent",
+      "expected_value": "critical",
+      "key_signals": [
+        "domain or workflow logic surface"
+      ],
+      "latest_existing_report": null,
+      "review_skill": "product-and-business-logic-review",
+      "run_recommendation": "run_now",
+      "save_dir": "docs/product-logic-reviews/",
+      "why_selected_or_skipped": "Selected from weighted repo evidence."
+    },
+    {
+      "applicable": "yes",
+      "blocking_unknowns": [],
+      "canonical_prompt": "perform a documentation review",
+      "confidence": "high",
+      "default_execution_group": "repo-shape-and-intent",
+      "expected_value": "high",
+      "key_signals": [
+        "documentation surface"
+      ],
+      "latest_existing_report": null,
+      "review_skill": "documentation-and-runbook-review",
+      "run_recommendation": "run_now",
+      "save_dir": "docs/documentation-reviews/",
+      "why_selected_or_skipped": "Selected from weighted repo evidence."
+    },
+    {
+      "applicable": "yes",
+      "blocking_unknowns": [],
+      "canonical_prompt": "perform a dependency review",
+      "confidence": "high",
+      "default_execution_group": "boundary-and-trust",
+      "expected_value": "critical",
+      "key_signals": [
+        "dependency manifest surface"
+      ],
+      "latest_existing_report": null,
+      "review_skill": "dependency-supply-chain-review",
+      "run_recommendation": "run_now",
+      "save_dir": "docs/dependency-reviews/",
+      "why_selected_or_skipped": "Selected from weighted repo evidence."
+    },
+    {
+      "applicable": "yes",
+      "blocking_unknowns": [],
+      "canonical_prompt": "perform an AI workflow review",
+      "confidence": "high",
+      "default_execution_group": "contract-and-integration",
+      "expected_value": "high",
+      "key_signals": [],
+      "latest_existing_report": null,
+      "review_skill": "ai-and-prompt-workflow-review",
+      "run_recommendation": "run_now",
+      "save_dir": "docs/ai-workflow-reviews/",
+      "why_selected_or_skipped": "Selected from weighted repo evidence."
+    },
+    {
+      "applicable": "yes",
+      "blocking_unknowns": [],
+      "canonical_prompt": "perform a CI review",
+      "confidence": "high",
+      "default_execution_group": "delivery-and-runtime",
+      "expected_value": "critical",
+      "key_signals": [
+        "CI workflow artifacts"
+      ],
+      "latest_existing_report": null,
+      "review_skill": "ci-cd-review",
+      "run_recommendation": "run_now",
+      "save_dir": "docs/ci-reviews/",
+      "why_selected_or_skipped": "Selected from weighted repo evidence."
+    },
+    {
+      "applicable": "yes",
+      "blocking_unknowns": [],
+      "canonical_prompt": "perform an observability review",
+      "confidence": "high",
+      "default_execution_group": "delivery-and-runtime",
+      "expected_value": "critical",
+      "key_signals": [],
+      "latest_existing_report": null,
+      "review_skill": "observability-review",
+      "run_recommendation": "run_now",
+      "save_dir": "docs/observability-reviews/",
+      "why_selected_or_skipped": "Selected from weighted repo evidence."
+    },
+    {
+      "applicable": "yes",
+      "blocking_unknowns": [],
+      "canonical_prompt": "perform a release readiness review",
+      "confidence": "high",
+      "default_execution_group": "delivery-and-runtime",
+      "expected_value": "critical",
+      "key_signals": [
+        "delivery or packaging surface"
+      ],
+      "latest_existing_report": null,
+      "review_skill": "release-readiness-review",
+      "run_recommendation": "run_now",
+      "save_dir": "docs/release-readiness-reviews/",
+      "why_selected_or_skipped": "Selected from weighted repo evidence."
+    },
+    {
+      "applicable": "yes",
+      "blocking_unknowns": [],
+      "canonical_prompt": "perform an incident readiness review",
+      "confidence": "high",
+      "default_execution_group": "delivery-and-runtime",
+      "expected_value": "high",
+      "key_signals": [
+        "runtime operations surface"
+      ],
+      "latest_existing_report": null,
+      "review_skill": "incident-readiness-review",
+      "run_recommendation": "run_now",
+      "save_dir": "docs/incident-readiness-reviews/",
+      "why_selected_or_skipped": "Selected from weighted repo evidence."
+    },
+    {
+      "applicable": "yes",
+      "blocking_unknowns": [],
+      "canonical_prompt": "perform a test review",
+      "confidence": "high",
+      "default_execution_group": "broad-integrative",
+      "expected_value": "critical",
+      "key_signals": [
+        "test files and tooling detected"
+      ],
+      "latest_existing_report": null,
+      "review_skill": "test-suite-review",
+      "run_recommendation": "run_now",
+      "save_dir": "docs/test-reviews/",
+      "why_selected_or_skipped": "Selected from weighted repo evidence."
+    }
+  ],
+  "queued_reviews": [],
+  "repo_name": "ha-light-controller",
+  "repo_root": "/home/chris/projects/ha-light-controller",
+  "report_paths": [
+    "docs/ai-workflow-reviews/2026-04-15-2029-codex-ai-workflow-review.md",
+    "docs/ai-workflow-reviews/2026-04-16-0018-ai-and-prompt-workflow-review-execution.json",
+    "docs/ci-reviews/2026-04-15-2028-codex-ci-review.md",
+    "docs/ci-reviews/2026-04-16-0018-ci-cd-review-execution.json",
+    "docs/dependency-reviews/2026-04-15-2026-codex-dependency-review.md",
+    "docs/dependency-reviews/2026-04-16-0018-dependency-supply-chain-review-execution.json",
+    "docs/documentation-reviews/2026-04-15-2029-codex-documentation-review.md",
+    "docs/documentation-reviews/2026-04-16-0018-documentation-and-runbook-review-execution.json",
+    "docs/incident-readiness-reviews/2026-04-15-2029-codex-incident-readiness-review.md",
+    "docs/incident-readiness-reviews/2026-04-16-0018-incident-readiness-review-execution.json",
+    "docs/observability-reviews/2026-04-15-2029-codex-observability-review.md",
+    "docs/observability-reviews/2026-04-16-0018-observability-review-execution.json",
+    "docs/product-logic-reviews/2026-04-15-2030-codex-product-logic-review.md",
+    "docs/product-logic-reviews/2026-04-16-0018-product-and-business-logic-review-execution.json",
+    "docs/release-readiness-reviews/2026-04-15-2030-codex-release-readiness-review.md",
+    "docs/release-readiness-reviews/2026-04-16-0018-release-readiness-review-execution.json",
+    "docs/review-orchestrator/2026-04-16-0018-codex-review-live-status.md",
+    "docs/review-orchestrator/2026-04-16-0018-codex-review-plan.md",
+    "docs/review-orchestrator/2026-04-16-0018-codex-review-shared-research.md",
+    "docs/review-orchestrator/2026-04-16-0018-codex-review-sweep.json",
+    "docs/review-orchestrator/2026-04-16-0018-codex-review-sweep.md",
+    "docs/test-reviews/2026-04-15-2034-codex-test-review.md",
+    "docs/test-reviews/2026-04-16-0018-test-suite-review-execution.json"
+  ],
+  "resume_token": "df80fee64e556b0b",
+  "review_manifest_paths": {
+    "ai-and-prompt-workflow-review": "/home/chris/projects/ha-light-controller/docs/ai-workflow-reviews/2026-04-16-0018-ai-and-prompt-workflow-review-execution.json",
+    "ci-cd-review": "/home/chris/projects/ha-light-controller/docs/ci-reviews/2026-04-16-0018-ci-cd-review-execution.json",
+    "dependency-supply-chain-review": "/home/chris/projects/ha-light-controller/docs/dependency-reviews/2026-04-16-0018-dependency-supply-chain-review-execution.json",
+    "documentation-and-runbook-review": "/home/chris/projects/ha-light-controller/docs/documentation-reviews/2026-04-16-0018-documentation-and-runbook-review-execution.json",
+    "incident-readiness-review": "/home/chris/projects/ha-light-controller/docs/incident-readiness-reviews/2026-04-16-0018-incident-readiness-review-execution.json",
+    "observability-review": "/home/chris/projects/ha-light-controller/docs/observability-reviews/2026-04-16-0018-observability-review-execution.json",
+    "product-and-business-logic-review": "/home/chris/projects/ha-light-controller/docs/product-logic-reviews/2026-04-16-0018-product-and-business-logic-review-execution.json",
+    "release-readiness-review": "/home/chris/projects/ha-light-controller/docs/release-readiness-reviews/2026-04-16-0018-release-readiness-review-execution.json",
+    "test-suite-review": "/home/chris/projects/ha-light-controller/docs/test-reviews/2026-04-16-0018-test-suite-review-execution.json"
+  },
+  "scope": ".",
+  "search_enabled": true,
+  "shared_research_error": null,
+  "shared_research_fingerprint": "37ee0a0d1ff3419a",
+  "shared_research_generated_at": "2026-04-16T00:25:55.003329+00:00",
+  "shared_research_last_message_path": null,
+  "shared_research_path": "docs/review-orchestrator/2026-04-16-0018-codex-review-shared-research.md",
+  "shared_research_status": "completed",
+  "skipped_review_count_live": 0,
+  "skipped_reviews": [],
+  "started_at": "2026-04-16-0018",
+  "working_tree_state": "dirty"
+}

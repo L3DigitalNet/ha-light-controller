@@ -1,0 +1,28 @@
+{
+  "canonical_prompt": "perform a release readiness review",
+  "completed_at": "2026-04-16T00:31:48.893498+00:00",
+  "error": null,
+  "follow_on_reviews": [],
+  "last_heartbeat_at": "2026-04-16T00:31:48.893498+00:00",
+  "last_message_path": null,
+  "last_progress_message": "Child review completed successfully. Elapsed: 5m53s. Saved report: docs/release-readiness-reviews/2026-04-15-2030-codex-release-readiness-review.md",
+  "latest_existing_report": null,
+  "queue_position": 7,
+  "repo_name": "ha-light-controller",
+  "repo_root": "/home/chris/projects/ha-light-controller",
+  "residual_risk_summary": [],
+  "review_manifest_path": "/home/chris/projects/ha-light-controller/docs/release-readiness-reviews/2026-04-16-0018-release-readiness-review-execution.json",
+  "review_skill": "release-readiness-review",
+  "save_dir": "docs/release-readiness-reviews/",
+  "saved_report_path": "docs/release-readiness-reviews/2026-04-15-2030-codex-release-readiness-review.md",
+  "shared_research_path": "docs/review-orchestrator/2026-04-16-0018-codex-review-shared-research.md",
+  "shared_research_status": "completed",
+  "started_at": "2026-04-16T00:25:55.069070+00:00",
+  "status": "completed",
+  "sweep_started_at": "2026-04-16-0018",
+  "top_findings_summary": [
+    "RR-001: Release metadata is internally inconsistent. The integration manifest says `0.4.0`, but the Python and Node package metadata still say `0.3.0`.",
+    "RR-002: Release-affecting validation depends on mutable upstream branch heads.",
+    "RR-003: The repo has no in-repo release workflow, no release checklist, and no rollback or post-release verification runbook."
+  ]
+}
