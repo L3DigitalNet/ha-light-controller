@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Verify version strings are consistent across all project metadata files.
 
-Checks manifest.json (source of truth for HA), pyproject.toml, CHANGELOG.md,
-and package.json (if present). Exits non-zero on mismatch.
+Checks manifest.json (source of truth for HA), pyproject.toml, and CHANGELOG.md.
+Exits non-zero on mismatch.
 """
 
 from __future__ import annotations
@@ -38,13 +38,6 @@ def read_changelog_version() -> str | None:
     return match.group(1) if match else None
 
 
-def read_package_json_version() -> str | None:
-    path = ROOT / "package.json"
-    if not path.exists():
-        return None
-    return json.loads(path.read_text())["version"]
-
-
 def main() -> int:
     truth = read_manifest_version()
     if truth is None:
@@ -55,7 +48,6 @@ def main() -> int:
         "manifest.json": truth,
         "pyproject.toml": read_pyproject_version(),
         "CHANGELOG.md": read_changelog_version(),
-        "package.json": read_package_json_version(),
     }
 
     ok = True

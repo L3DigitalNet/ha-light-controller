@@ -226,17 +226,5 @@ __marimo__/
 # - Makefile                               (CLI commands)
 # ============================================================================
 
-# Node.js
-node_modules/
-
 # Claude Code state
 .claude/state/
-
-# Playwright MCP
-.playwright-mcp/
-
-# UI test screenshots
-ui-test-*.png
-
-# Test results
-test-results/
