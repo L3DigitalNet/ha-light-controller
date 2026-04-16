@@ -30,8 +30,9 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 ```bash
 git clone https://github.com/L3DigitalNet/ha-light-controller.git
 cd ha-light-controller
-make setup        # Creates venv and installs dependencies
-source .venv/bin/activate
+uv venv .venv                   # Create virtual environment
+source .venv/bin/activate       # Activate it
+make setup                      # Install dependencies + pre-commit hooks
 ```
 
 ### Run tests
