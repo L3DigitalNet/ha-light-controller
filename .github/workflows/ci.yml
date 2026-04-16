@@ -7,6 +7,10 @@ on:
     branches: [main, testing]
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint:
     name: Lint with Ruff
@@ -15,31 +19,24 @@ jobs:
       contents: read
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
           python-version: "3.13"
 
-      - name: Cache pip
-        uses: actions/cache@v5
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/pyproject.toml') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install ruff
+        run: uv sync --locked --group dev
 
       - name: Run Ruff linter
-        run: ruff check custom_components/ tests/ scripts/
+        run: uv run ruff check custom_components/ tests/ scripts/
 
       - name: Run Ruff formatter check
-        run: ruff format --check custom_components/ tests/ scripts/
+        run: uv run ruff format --check custom_components/ tests/ scripts/
 
   type-check:
     name: Type Check with mypy
@@ -48,28 +45,21 @@ jobs:
       contents: read
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
           python-version: "3.13"
 
-      - name: Cache pip
-        uses: actions/cache@v5
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/pyproject.toml') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install mypy homeassistant
+        run: uv sync --locked --group dev
 
       - name: Run mypy
-        run: mypy custom_components/
+        run: uv run mypy custom_components/
 
   test:
     name: Test with pytest
@@ -81,37 +71,29 @@ jobs:
         python-version: ["3.13", "3.14"]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Cache pip
-        uses: actions/cache@v5
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/pyproject.toml') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-${{ matrix.python-version }}-
-
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install homeassistant aiohttp voluptuous
-          pip install pytest pytest-asyncio pytest-homeassistant-custom-component pytest-cov
+        run: uv sync --locked --group dev
 
       - name: Run tests with coverage
         run: |
-          pytest tests/ \
+          uv run pytest tests/ \
             --cov=custom_components \
             --cov-report=xml \
             --cov-report=term-missing \
             -v
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@75cd11691c0faa626561e295848008c8a7dddffe # v5.5.4
         if: matrix.python-version == '3.13'
         with:
           file: ./coverage.xml
@@ -125,30 +107,21 @@ jobs:
       contents: read
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
           python-version: "3.13"
 
-      - name: Cache pip
-        uses: actions/cache@v5
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-verify-${{ hashFiles('**/pyproject.toml') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-verify-
-
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install homeassistant aiohttp voluptuous
-          pip install pytest pytest-asyncio pytest-homeassistant-custom-component pytest-cov
-          pip install ruff mypy pre-commit
+        run: uv sync --locked --group dev
 
       - name: Run environment verification
-        run: python scripts/verify_environment.py
+        run: uv run python scripts/verify_environment.py
 
   all-checks:
     name: All Checks Passed

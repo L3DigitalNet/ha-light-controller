@@ -137,7 +137,7 @@ def main() -> int:
     results["python_version"] = check_python_version()
 
     # Virtual environment check - optional in CI
-    venv_path = project_root / "venv"
+    venv_path = project_root / ".venv"
     if venv_path.exists() and venv_path.is_dir():
         print_success(f"Virtual environment: {venv_path}")
     elif is_ci:

@@ -226,6 +226,14 @@ class PresetManager:
         # Trigger entity updates
         await self._notify_listeners()
 
+    def _is_name_taken(self, name: str, exclude_id: str | None = None) -> bool:
+        """Check if a preset name is already in use (case-insensitive)."""
+        name_lower = name.lower()
+        for pid, preset in self._presets.items():
+            if pid != exclude_id and preset.name.lower() == name_lower:
+                return True
+        return False
+
     async def create_preset(
         self,
         name: str,
@@ -239,7 +247,10 @@ class PresetManager:
         transition: float = 0.0,
         skip_verification: bool = False,
     ) -> PresetConfig:
-        """Create a new preset."""
+        """Create a new preset. Raises ValueError if name is already taken."""
+        if self._is_name_taken(name):
+            raise ValueError(f"A preset named '{name}' already exists")
+
         preset_id = str(uuid.uuid4())
 
         preset = PresetConfig(
@@ -262,6 +273,51 @@ class PresetManager:
         await self._save_presets()
 
         _LOGGER.info("Created preset: %s (%s)", name, preset_id)
+        return preset
+
+    async def update_preset(
+        self,
+        preset_id: str,
+        name: str,
+        entities: list[str],
+        state: str = "on",
+        brightness_pct: int = 100,
+        rgb_color: list[int] | None = None,
+        color_temp_kelvin: int | None = None,
+        effect: str | None = None,
+        targets: list[dict[str, Any]] | None = None,
+        transition: float = 0.0,
+        skip_verification: bool = False,
+    ) -> PresetConfig | None:
+        """Update an existing preset in-place, preserving its ID.
+
+        Raises ValueError if name collides with another preset (not itself).
+        """
+        if preset_id not in self._presets:
+            _LOGGER.warning("Preset not found for update: %s", preset_id)
+            return None
+
+        if self._is_name_taken(name, exclude_id=preset_id):
+            raise ValueError(f"A preset named '{name}' already exists")
+
+        preset = PresetConfig(
+            id=preset_id,
+            name=name,
+            entities=entities,
+            state=state,
+            brightness_pct=brightness_pct,
+            rgb_color=rgb_color,
+            color_temp_kelvin=color_temp_kelvin,
+            effect=effect,
+            targets=targets or [],
+            transition=transition,
+            skip_verification=skip_verification,
+        )
+
+        self._presets[preset_id] = preset
+        await self._save_presets()
+
+        _LOGGER.info("Updated preset: %s (%s)", name, preset_id)
         return preset
 
     async def delete_preset(self, preset_id: str) -> bool:

@@ -1426,11 +1426,10 @@ class TestCoverageGaps:
 
     @pytest.mark.asyncio
     async def test_create_preset_from_data_editing_existing(self, config_entry):
-        """Test editing an existing preset."""
+        """Test editing an existing preset uses update_preset (preserves preset_id)."""
         mock_pm = MagicMock()
         mock_pm.presets = {"old_id": MagicMock()}
-        mock_pm.delete_preset = AsyncMock()
-        mock_pm.create_preset = AsyncMock()
+        mock_pm.update_preset = AsyncMock()
 
         runtime_data = MagicMock()
         runtime_data.preset_manager = mock_pm
@@ -1452,8 +1451,9 @@ class TestCoverageGaps:
             PRESET_SKIP_VERIFICATION: False,
         }
         await flow._create_preset_from_data()
-        mock_pm.delete_preset.assert_called_with("old_id")
-        mock_pm.create_preset.assert_called_once()
+        mock_pm.update_preset.assert_called_once()
+        call_args = mock_pm.update_preset.call_args
+        assert call_args[0][0] == "old_id"  # preset_id preserved
 
     # =============================================================================
     # Manage/Edit/Delete with no preset_manager

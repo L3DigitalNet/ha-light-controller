@@ -46,6 +46,7 @@ from .const import (
     PRESET_BRIGHTNESS_PCT,
     PRESET_COLOR_MODE,
     PRESET_COLOR_TEMP_KELVIN,
+    PRESET_EFFECT,
     PRESET_ENTITIES,
     PRESET_NAME,
     PRESET_RGB_COLOR,
@@ -813,30 +814,31 @@ class LightControllerOptionsFlow(OptionsFlow):
         ):
             preset_manager = self.config_entry.runtime_data.preset_manager
             if preset_manager:
+                # Collect preset-level defaults (round-trip from service-created presets)
+                preset_kwargs: dict[str, Any] = {
+                    "name": name,
+                    "entities": entities,
+                    "state": preset_state,
+                    "targets": targets,
+                    "transition": preset_transition,
+                    "skip_verification": data.get(PRESET_SKIP_VERIFICATION, False),
+                    "brightness_pct": data.get(PRESET_BRIGHTNESS_PCT, 100),
+                    "rgb_color": data.get(PRESET_RGB_COLOR),
+                    "color_temp_kelvin": data.get(PRESET_COLOR_TEMP_KELVIN),
+                    "effect": data.get(PRESET_EFFECT),
+                }
+
                 if editing_preset_id and editing_preset_id in preset_manager.presets:
-                    # Delete old preset and create new one with same ID
-                    await preset_manager.delete_preset(editing_preset_id)
-                    await preset_manager.create_preset(
-                        name=name,
-                        entities=entities,
-                        state=preset_state,
-                        targets=targets,
-                        transition=preset_transition,
-                        skip_verification=data.get(PRESET_SKIP_VERIFICATION, False),
+                    # Update in-place to preserve preset_id (and entity registry IDs)
+                    await preset_manager.update_preset(
+                        editing_preset_id, **preset_kwargs
                     )
                     _LOGGER.info(
                         "Updated preset: %s with %d entity configs", name, len(targets)
                     )
                 else:
                     # Create new preset
-                    await preset_manager.create_preset(
-                        name=name,
-                        entities=entities,
-                        state=preset_state,
-                        targets=targets,
-                        transition=preset_transition,
-                        skip_verification=data.get(PRESET_SKIP_VERIFICATION, False),
-                    )
+                    await preset_manager.create_preset(**preset_kwargs)
                     _LOGGER.info(
                         "Created preset: %s with %d entity configs", name, len(targets)
                     )
@@ -902,6 +904,11 @@ class LightControllerOptionsFlow(OptionsFlow):
                     PRESET_NAME: preset.name,
                     PRESET_ENTITIES: list(preset.entities),
                     PRESET_SKIP_VERIFICATION: preset.skip_verification,
+                    PRESET_BRIGHTNESS_PCT: preset.brightness_pct,
+                    PRESET_RGB_COLOR: preset.rgb_color,
+                    PRESET_COLOR_TEMP_KELVIN: preset.color_temp_kelvin,
+                    PRESET_EFFECT: preset.effect,
+                    PRESET_TRANSITION: preset.transition,
                     "targets": {},
                 }
 

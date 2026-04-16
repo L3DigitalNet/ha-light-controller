@@ -7,10 +7,10 @@ and information for contributors.
 
 1. Fork the repository
 2. Clone your fork: `git clone https://github.com/YOUR_USERNAME/ha-light-controller.git`
-3. Create a feature branch: `git checkout -b feature/your-feature-name`
+3. Create a feature branch from `testing`: `git checkout -b feature/your-feature-name testing`
 4. Make your changes
 5. Push to your fork: `git push origin feature/your-feature-name`
-6. Open a Pull Request against the `main` branch
+6. Open a Pull Request against the `testing` branch (not `main`)
 
 ## Development Setup
 
@@ -30,8 +30,9 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 ```bash
 git clone https://github.com/L3DigitalNet/ha-light-controller.git
 cd ha-light-controller
-make setup        # Creates venv and installs dependencies
-source .venv/bin/activate
+uv venv .venv                   # Create virtual environment
+source .venv/bin/activate       # Activate it
+make setup                      # Install dependencies + pre-commit hooks
 ```
 
 ### Run tests

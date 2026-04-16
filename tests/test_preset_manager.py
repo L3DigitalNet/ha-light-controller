@@ -781,3 +781,45 @@ class TestCoverageGaps:
         target = preset.targets[0]
         assert "brightness_pct" not in target
         assert target["entity_id"] == "light.test"
+
+
+class TestPresetNameUniqueness:
+    """Tests for case-insensitive preset name uniqueness (PLR-005)."""
+
+    @pytest.mark.asyncio
+    async def test_create_duplicate_name_raises(self, hass, config_entry):
+        """Creating a preset with a name that already exists raises ValueError."""
+        manager = PresetManager(hass, config_entry)
+        await manager.create_preset(name="Living Room", entities=["light.a"])
+
+        with pytest.raises(ValueError, match="already exists"):
+            await manager.create_preset(name="living room", entities=["light.b"])
+
+    @pytest.mark.asyncio
+    async def test_create_different_name_succeeds(self, hass, config_entry):
+        """Creating a preset with a unique name succeeds."""
+        manager = PresetManager(hass, config_entry)
+        p1 = await manager.create_preset(name="Living Room", entities=["light.a"])
+        p2 = await manager.create_preset(name="Bedroom", entities=["light.b"])
+        assert p1.name != p2.name
+
+    @pytest.mark.asyncio
+    async def test_update_same_name_succeeds(self, hass, config_entry):
+        """Updating a preset to keep its own name succeeds."""
+        manager = PresetManager(hass, config_entry)
+        p = await manager.create_preset(name="Living Room", entities=["light.a"])
+        updated = await manager.update_preset(
+            p.id, name="Living Room", entities=["light.b"]
+        )
+        assert updated is not None
+        assert updated.entities == ["light.b"]
+
+    @pytest.mark.asyncio
+    async def test_update_to_taken_name_raises(self, hass, config_entry):
+        """Updating a preset to use another preset's name raises ValueError."""
+        manager = PresetManager(hass, config_entry)
+        await manager.create_preset(name="Living Room", entities=["light.a"])
+        p2 = await manager.create_preset(name="Bedroom", entities=["light.b"])
+
+        with pytest.raises(ValueError, match="already exists"):
+            await manager.update_preset(p2.id, name="LIVING ROOM", entities=["light.b"])

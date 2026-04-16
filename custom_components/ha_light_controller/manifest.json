@@ -14,5 +14,5 @@
   "iot_class": "calculated",
   "issue_tracker": "https://github.com/L3DigitalNet/ha-light-controller/issues",
   "requirements": [],
-  "version": "0.4.0"
+  "version": "0.4.1"
 }

@@ -127,7 +127,12 @@ status tracking.
 ## Documentation
 
 See the **[Usage Guide](USAGE.md)** for complete service parameters, configuration
-options, and examples.
+options, examples, and [diagnostics](USAGE.md#diagnostics).
+
+## Runbooks
+
+- [Incident Disablement](docs/runbooks/incident-disablement.md) — containment, evidence capture, fallback, rollback
+- [Release](docs/runbooks/release.md) — version bump order, tagging, HACS validation
 
 ## Links
 

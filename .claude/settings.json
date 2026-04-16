@@ -1,7 +1,3 @@
 {
-  "permissions": {
-    "allow": [
-      "Read(//home/chris/projects/ha-template/**)"
-    ]
-  }
+  "permissions": {}
 }

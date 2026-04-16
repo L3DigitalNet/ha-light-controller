@@ -1100,13 +1100,8 @@ class TestLightControllerVerificationEdgeCases:
         result = controller._verify_light(target, TargetState.ON, tolerances)
         assert result == VerificationResult.WRONG_BRIGHTNESS
 
-    def test_verify_light_rgb_only_wrong_color_succeeds(self, hass):
-        """Test verifying light with RGB target but wrong color.
-
-        Current behavior: When only RGB is specified and wrong, verification
-        succeeds because the unspecified kelvin mode defaults to OK in the
-        lenient 'rgb_ok or kelvin_ok' check.
-        """
+    def test_verify_light_rgb_only_wrong_color_fails(self, hass):
+        """Test verifying light with RGB target but wrong color returns WRONG_COLOR."""
         from tests.conftest import create_light_state
 
         state = create_light_state(
@@ -1125,16 +1120,50 @@ class TestLightControllerVerificationEdgeCases:
         tolerances = ColorTolerance()
 
         result = controller._verify_light(target, TargetState.ON, tolerances)
-        # Current behavior: succeeds because kelvin is not specified (defaults to OK)
+        assert result == VerificationResult.WRONG_COLOR
+
+    def test_verify_light_rgb_only_correct_color_succeeds(self, hass):
+        """Regression: RGB-only target with matching color returns SUCCESS."""
+        from tests.conftest import create_light_state
+
+        state = create_light_state(
+            "light.test",
+            STATE_ON,
+            brightness=255,
+            rgb_color=(255, 0, 0),
+            supported_color_modes=["rgb"],
+        )
+        hass.states.get = MagicMock(return_value=state)
+
+        controller = LightController(hass)
+        target = LightTarget("light.test", brightness_pct=100, rgb_color=[255, 0, 0])
+        tolerances = ColorTolerance()
+
+        result = controller._verify_light(target, TargetState.ON, tolerances)
         assert result == VerificationResult.SUCCESS
 
-    def test_verify_light_kelvin_only_wrong_color_succeeds(self, hass):
-        """Test verifying light with kelvin target but wrong temp.
+    def test_verify_light_kelvin_only_correct_color_succeeds(self, hass):
+        """Regression: kelvin-only target with matching temp returns SUCCESS."""
+        from tests.conftest import create_light_state
 
-        Current behavior: When only kelvin is specified and wrong, verification
-        succeeds because the unspecified RGB mode defaults to OK in the
-        lenient 'rgb_ok or kelvin_ok' check.
-        """
+        state = create_light_state(
+            "light.test",
+            STATE_ON,
+            brightness=255,
+            color_temp_kelvin=2700,
+            supported_color_modes=["color_temp"],
+        )
+        hass.states.get = MagicMock(return_value=state)
+
+        controller = LightController(hass)
+        target = LightTarget("light.test", brightness_pct=100, color_temp_kelvin=2700)
+        tolerances = ColorTolerance(kelvin=150)
+
+        result = controller._verify_light(target, TargetState.ON, tolerances)
+        assert result == VerificationResult.SUCCESS
+
+    def test_verify_light_kelvin_only_wrong_color_fails(self, hass):
+        """Test verifying light with kelvin target but wrong temp returns WRONG_COLOR."""
         from tests.conftest import create_light_state
 
         state = create_light_state(
@@ -1153,8 +1182,7 @@ class TestLightControllerVerificationEdgeCases:
         tolerances = ColorTolerance(kelvin=150)
 
         result = controller._verify_light(target, TargetState.ON, tolerances)
-        # Current behavior: succeeds because RGB is not specified (defaults to OK)
-        assert result == VerificationResult.SUCCESS
+        assert result == VerificationResult.WRONG_COLOR
 
     def test_verify_light_both_wrong_fails(self, hass):
         """Test that verification fails when both RGB and kelvin are specified and wrong."""
@@ -1183,8 +1211,14 @@ class TestLightControllerVerificationEdgeCases:
         # Both specified and both wrong = WRONG_COLOR
         assert result == VerificationResult.WRONG_COLOR
 
-    def test_verify_light_both_rgb_and_kelvin_rgb_matches(self, hass):
-        """Test verifying light with both RGB and kelvin when RGB matches."""
+    def test_verify_light_both_rgb_and_kelvin_rgb_matches_kelvin_missing(self, hass):
+        """When both modes targeted, RGB matches but kelvin not active → WRONG_COLOR.
+
+        A light can only be in one color mode at a time. If both are requested
+        and the light is in RGB mode, kelvin verification fails because the
+        attribute is absent (supported but not active). Both requested modes
+        must match per PLR-001 fix.
+        """
         from tests.conftest import create_light_state
 
         state = create_light_state(
@@ -1206,7 +1240,7 @@ class TestLightControllerVerificationEdgeCases:
         tolerances = ColorTolerance()
 
         result = controller._verify_light(target, TargetState.ON, tolerances)
-        assert result == VerificationResult.SUCCESS
+        assert result == VerificationResult.WRONG_COLOR
 
     def test_verify_light_both_unsupported(self, hass):
         """Test verifying light with both RGB and kelvin but neither supported."""
@@ -1513,6 +1547,54 @@ class TestLightControllerEnsureStateAdvanced:
         assert len(sent_batches) == 2
         assert set(sent_batches[0]) == {"light.group_ok", "light.group_flaky"}
         assert set(sent_batches[1]) == {"light.group_ok", "light.group_flaky"}
+
+
+class TestGroupOverrideExpansion:
+    """Tests that group entity overrides are remapped to individual members (PLR-002)."""
+
+    @pytest.mark.asyncio
+    async def test_group_override_applied_to_members(self, hass):
+        """Override keyed to a group entity should apply to each member light."""
+        from tests.conftest import create_light_state
+
+        # Group with two members
+        group_state = MagicMock()
+        group_state.state = "on"
+        group_state.attributes = {
+            "entity_id": ["light.lamp1", "light.lamp2"],
+        }
+        lamp_state = create_light_state("light.lamp1", STATE_ON, brightness=255)
+
+        def get_state(entity_id):
+            if entity_id == "light.living_room":
+                return group_state
+            return lamp_state
+
+        hass.states.get = MagicMock(side_effect=get_state)
+
+        controller = LightController(hass)
+        result = await controller.ensure_state(
+            entities=["light.living_room"],
+            state_target="on",
+            default_brightness_pct=100,
+            targets=[
+                {
+                    "entity_id": "light.living_room",
+                    "brightness_pct": 50,
+                    "rgb_color": [255, 0, 0],
+                }
+            ],
+            skip_verification=True,
+        )
+
+        assert result["success"] is True
+        # Verify the group override was applied
+        call_args = hass.services.async_call.call_args_list
+        assert len(call_args) > 0
+        for call in call_args:
+            sdata = call[1].get("service_data") or call[0][2]
+            if "brightness_pct" in sdata:
+                assert sdata["brightness_pct"] == 50
 
 
 class TestMixedStateHandling:

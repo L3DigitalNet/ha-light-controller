@@ -386,10 +386,7 @@ Each preset creates two entities:
 
 ### Preset Button
 
-The button entity displays a dynamic icon based on the preset's target state:
-
-- `mdi:lightbulb-group` for presets that turn lights **on**
-- `mdi:lightbulb-group-off` for presets that turn lights **off**
+The button entity uses a static `mdi:lightbulb-group` icon (declared in `icons.json`).
 
 **Attributes:**
 
@@ -719,7 +716,9 @@ logger:
 
 ### Presets Not Appearing
 
-- Restart Home Assistant after creating presets via the options flow.
+- Preset button and sensor entities are created dynamically via a listener; no restart
+  is needed. If they don't appear within a few seconds, reload the integration from
+  **Settings** → **Devices & Services** → **Light Controller** → three-dot menu → **Reload**.
 - Check **Settings** → **Devices & Services** → **Light Controller** → **Entities** to
   see if the button and sensor were created.
 - Look for errors in the Home Assistant log.
@@ -738,6 +737,19 @@ logger:
   `living_room`).
 - For groups, use either `light.group_name` or `group.group_name` depending on how the
   group was created.
+
+---
+
+## Diagnostics
+
+Light Controller supports Home Assistant's built-in diagnostics feature. To download a
+diagnostics report:
+
+1. Go to **Settings** → **Devices & Services** → **Light Controller**
+2. Click the three-dot menu → **Download diagnostics**
+
+The report includes a summary of configured presets (count, names, entity lists). Share
+this file when reporting issues.
 
 ---
 

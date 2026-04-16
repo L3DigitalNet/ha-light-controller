@@ -169,12 +169,13 @@ class OperationResult:
     attempts: int = 0
     total_lights: int = 0
     failed_lights: list[str] = field(default_factory=list)
+    failed_light_details: dict[str, str] = field(default_factory=dict)
     skipped_lights: list[str] = field(default_factory=list)
     elapsed_seconds: float = 0.0
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for service response."""
-        return {
+        result: dict[str, Any] = {
             RESULT_SUCCESS: self.success,
             RESULT_CODE: self.result_code,
             RESULT_MESSAGE: self.message,
@@ -184,6 +185,9 @@ class OperationResult:
             RESULT_SKIPPED_LIGHTS: self.skipped_lights,
             RESULT_ELAPSED_SECONDS: round(self.elapsed_seconds, 2),
         }
+        if self.failed_light_details:
+            result["failed_light_details"] = self.failed_light_details
+        return result
 
 
 # =============================================================================
@@ -469,13 +473,13 @@ class LightController:
             rgb_ok = rgb_result is not False if has_rgb else True
             kelvin_ok = kelvin_result is not False if has_kelvin else True
 
-            # Success if either color mode is satisfied
-            if rgb_ok or kelvin_ok:
+            # Every requested color mode must match
+            if rgb_ok and kelvin_ok:
                 return VerificationResult.SUCCESS
             return VerificationResult.WRONG_COLOR
 
-        except Exception as e:
-            _LOGGER.error("Error verifying %s: %s", entity_id, e)
+        except Exception:
+            _LOGGER.exception("Error verifying %s", entity_id)
             return VerificationResult.ERROR
 
     # =========================================================================
@@ -492,8 +496,8 @@ class LightController:
                 {"entity_id": entity_ids},
                 blocking=True,
             )
-        except Exception as e:
-            _LOGGER.error("Error sending turn_off: %s", e)
+        except Exception:
+            _LOGGER.exception("Error sending turn_off")
 
     async def _send_turn_on(
         self, group: LightGroup, transition: float | None = None
@@ -509,8 +513,8 @@ class LightController:
                 service_data,
                 blocking=True,
             )
-        except Exception as e:
-            _LOGGER.error("Error sending turn_on: %s", e)
+        except Exception:
+            _LOGGER.exception("Error sending turn_on")
 
     async def _send_commands_per_target(
         self,
@@ -622,8 +626,8 @@ class LightController:
                 {"name": name, "message": message},
                 blocking=False,
             )
-        except Exception as e:
-            _LOGGER.error("Error writing to logbook: %s", e)
+        except Exception:
+            _LOGGER.exception("Error writing to logbook")
 
     # =========================================================================
     # Main Entry Point
@@ -720,12 +724,21 @@ class LightController:
                 ", ".join(skipped_entities),
             )
 
-        # Build overrides dict
+        # Build overrides dict, expanding group entities to their members
         overrides: dict[str, dict[str, Any]] = {}
         if targets:
             for t in targets:
-                if isinstance(t, dict) and "entity_id" in t:
-                    overrides[t["entity_id"]] = t
+                if not isinstance(t, dict) or "entity_id" not in t:
+                    continue
+                eid = t["entity_id"]
+                if eid in members:
+                    overrides[eid] = t
+                else:
+                    # Entity may be a group that was expanded; remap to members
+                    group_members, _ = self._expand_entity(eid)
+                    for gm in group_members:
+                        if gm in members and gm not in overrides:
+                            overrides[gm] = {**t, "entity_id": gm}
 
         # Build targets
         pending_targets = self._build_targets(
@@ -767,6 +780,7 @@ class LightController:
 
         # Main retry loop
         attempt = 0
+        verification_results: dict[str, VerificationResult] = {}
 
         while pending_targets and attempt < retry_config.max_retries:
             elapsed = monotonic() - script_start
@@ -804,7 +818,7 @@ class LightController:
                 global_transition=use_transition,
                 use_target_transitions=use_target_transitions,
             )
-            verification_results: dict[str, VerificationResult] = {}
+            verification_results.clear()
             for target in pending_targets:
                 verification_results[target.entity_id] = self._verify_light(
                     target,
@@ -848,6 +862,11 @@ class LightController:
         # Handle results
         elapsed = monotonic() - script_start
         failed_entities = [t.entity_id for t in pending_targets]
+        failed_details = {
+            eid: verification_results[eid].value
+            for eid in failed_entities
+            if eid in verification_results
+        }
 
         # Timeout
         if elapsed >= retry_config.max_runtime_seconds and pending_targets:
@@ -865,6 +884,7 @@ class LightController:
                 attempts=attempt,
                 total_lights=len(members),
                 failed_lights=failed_entities,
+                failed_light_details=failed_details,
                 skipped_lights=skipped_entities,
                 elapsed_seconds=elapsed,
             ).to_dict()
@@ -882,6 +902,7 @@ class LightController:
                 attempts=attempt,
                 total_lights=len(members),
                 failed_lights=failed_entities,
+                failed_light_details=failed_details,
                 skipped_lights=skipped_entities,
                 elapsed_seconds=elapsed,
             ).to_dict()
