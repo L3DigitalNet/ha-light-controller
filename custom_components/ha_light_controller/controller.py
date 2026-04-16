@@ -478,7 +478,7 @@ class LightController:
                 return VerificationResult.SUCCESS
             return VerificationResult.WRONG_COLOR
 
-        except Exception as e:
+        except Exception:
             _LOGGER.exception("Error verifying %s", entity_id)
             return VerificationResult.ERROR
 
@@ -496,7 +496,7 @@ class LightController:
                 {"entity_id": entity_ids},
                 blocking=True,
             )
-        except Exception as e:
+        except Exception:
             _LOGGER.exception("Error sending turn_off")
 
     async def _send_turn_on(
@@ -513,7 +513,7 @@ class LightController:
                 service_data,
                 blocking=True,
             )
-        except Exception as e:
+        except Exception:
             _LOGGER.exception("Error sending turn_on")
 
     async def _send_commands_per_target(
@@ -626,7 +626,7 @@ class LightController:
                 {"name": name, "message": message},
                 blocking=False,
             )
-        except Exception as e:
+        except Exception:
             _LOGGER.exception("Error writing to logbook")
 
     # =========================================================================

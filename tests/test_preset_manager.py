@@ -808,7 +808,9 @@ class TestPresetNameUniqueness:
         """Updating a preset to keep its own name succeeds."""
         manager = PresetManager(hass, config_entry)
         p = await manager.create_preset(name="Living Room", entities=["light.a"])
-        updated = await manager.update_preset(p.id, name="Living Room", entities=["light.b"])
+        updated = await manager.update_preset(
+            p.id, name="Living Room", entities=["light.b"]
+        )
         assert updated is not None
         assert updated.entities == ["light.b"]
 

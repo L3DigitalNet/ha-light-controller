@@ -1136,9 +1136,7 @@ class TestLightControllerVerificationEdgeCases:
         hass.states.get = MagicMock(return_value=state)
 
         controller = LightController(hass)
-        target = LightTarget(
-            "light.test", brightness_pct=100, rgb_color=[255, 0, 0]
-        )
+        target = LightTarget("light.test", brightness_pct=100, rgb_color=[255, 0, 0])
         tolerances = ColorTolerance()
 
         result = controller._verify_light(target, TargetState.ON, tolerances)
@@ -1158,9 +1156,7 @@ class TestLightControllerVerificationEdgeCases:
         hass.states.get = MagicMock(return_value=state)
 
         controller = LightController(hass)
-        target = LightTarget(
-            "light.test", brightness_pct=100, color_temp_kelvin=2700
-        )
+        target = LightTarget("light.test", brightness_pct=100, color_temp_kelvin=2700)
         tolerances = ColorTolerance(kelvin=150)
 
         result = controller._verify_light(target, TargetState.ON, tolerances)
@@ -1567,9 +1563,7 @@ class TestGroupOverrideExpansion:
         group_state.attributes = {
             "entity_id": ["light.lamp1", "light.lamp2"],
         }
-        lamp_state = create_light_state(
-            "light.lamp1", STATE_ON, brightness=255
-        )
+        lamp_state = create_light_state("light.lamp1", STATE_ON, brightness=255)
 
         def get_state(entity_id):
             if entity_id == "light.living_room":

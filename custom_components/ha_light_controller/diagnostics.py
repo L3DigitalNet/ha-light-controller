@@ -14,10 +14,7 @@ TO_REDACT = {"name", "entities", "entity_id"}
 
 def _redact_dict(data: dict[str, Any], keys: set[str]) -> dict[str, Any]:
     """Redact values for specified keys in a dict."""
-    return {
-        k: "**REDACTED**" if k in keys else v
-        for k, v in data.items()
-    }
+    return {k: "**REDACTED**" if k in keys else v for k, v in data.items()}
 
 
 async def async_get_config_entry_diagnostics(

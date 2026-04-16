@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import pytest
 from homeassistant.core import HomeAssistant
-from homeassistant.config_entries import ConfigEntryState
 
 from custom_components.ha_light_controller.const import DOMAIN
 
