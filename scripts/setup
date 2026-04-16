@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Bootstrap script for devcontainer postCreateCommand.
+# Installs uv and syncs all dev dependencies from the lockfile.
+set -euo pipefail
+
+if ! command -v uv &>/dev/null; then
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    export PATH="$HOME/.local/bin:$PATH"
+fi
+
+uv sync --locked --group dev
+pre-commit install 2>/dev/null || true
+
+echo "Setup complete. Run 'make test' to verify."
