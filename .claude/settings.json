@@ -1,3 +1,16 @@
 {
-  "permissions": {}
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 .claude/hooks/session_start.py",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
 }
