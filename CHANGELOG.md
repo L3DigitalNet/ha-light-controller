@@ -44,7 +44,7 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Added
 - `scripts/check_versions.py` for version consistency validation (called from `make ci`)
 - `docs/runbooks/incident-disablement.md` and `docs/runbooks/release.md`
-- Five new conventions in `docs/conventions.md` (release, deps, diagnostics, ops)
+- Five new conventions in `docs/handoff/conventions.md` (release, deps, diagnostics, ops)
 - Integration test skeleton (`tests/integration/`) with follow-up migration plan
 - `PresetManager.update_preset()` for in-place preset modification
 

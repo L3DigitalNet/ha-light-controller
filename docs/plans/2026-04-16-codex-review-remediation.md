@@ -172,7 +172,7 @@
 - Covers: TEST-006, RR-004 (coverage part), RR-005, IR-005, OBS-005
 - Add `--cov-fail-under=95` per Q7
 - Reassess `quality_scale.yaml` `repair-issues` exemption
-- Add to `docs/conventions.md` (six-field schema):
+- Add to `docs/handoff/conventions.md` (six-field schema):
   - `conv-release-001` version-sync-before-tag
   - `conv-release-002` actions-pinned-to-SHA
   - `conv-release-003` authoritative-dep-inventory
